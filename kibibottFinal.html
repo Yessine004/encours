@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kibi</title>
+    <!-- Google Fonts Import -->
+    <link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/72ef189a04.js" crossorigin="anonymous"></script>
+    <style>
+        /* Font Styling */
+        body {
+            margin: 0;
+            font-family: 'SUSE', sans-serif; /* Apply SUSE font to the body */
+            scroll-behavior: smooth;
+            background-color: #1d1f22;
+            color: #e4e6eb;
+            padding-bottom: 60px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        h1, h2, h3, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #202225;
+            color: #e4e6eb;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #4f545c;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+            transition: opacity 0.3s ease; /* Add transition for opacity */
+        }
+
+        .navbar.transparent {
+            opacity: 0.7; /* Lower opacity when scrolled */
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin: 0 20px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            font-size: 1.1em;
+            padding: 5px 0;
+            position: relative;
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+        }
+
+        .nav-links a::before {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: #ff0000;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            color: #ffffff; /* Ensures the text color returns to normal on hover or focus */
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .menu-toggle .bar {
+            background: #ffffff;
+            height: 4px;
+            width: 30px;
+            margin: 4px 0;
+            transition: 0.3s;
+        }
+
+        /* Mobile Menu Styling */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: #2f3136;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                padding: 20px 0;
+                box-sizing: border-box;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 15px;
+                text-align: center;
+                border-bottom: 1px solid #4f545c;
+            }
+        }
+
+        /* Section Styling */
+        .section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 60px;
+            min-height: 100vh;
+            background: #1d1f22;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .text-container {
+            flex: 1;
+            margin-left: 40px;
+            opacity: 0;
+            transform: translateX(50px);
+            animation: fadeInRight 1s forwards;
+        }
+
+        .photo-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: fadeInLeft 1s forwards;
+        }
+
+        .photo-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            animation: scaleIn 1s forwards;
+        }
+
+        /* Specific Styling for #home Section */
+        #home .text-container {
+            margin-left: 20px; /* Reduced margin for closer alignment */
+        }
+
+        #home h1 {
+            font-size: 4em; /* Much larger font size */
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        #home p {
+            font-size: 1.6em; /* Larger font size */
+            color: #99aab5;
+            margin: 10px 0; /* Reduced margin */
+            padding: 0;
+        }
+
+        #home .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            color: #ffffff;
+            background-color: #ff0000; /* Red theme background */
+            border: 2px solid #ff0000; /* Red border */
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px; /* Reduced margin */
+        }
+
+        #home .btn:hover {
+            background-color: #ff0000; /* Slightly darker red on hover */
+            transform: scale(1.05);
+            color: #ffffff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Animations */
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes glowingText {
+            from {
+                text-shadow: 0 0 10px #ff0000;
+            }
+            to {
+                text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000;
+            }
+        }
+
+        @keyframes moveUp {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floating {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-1000px);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(30px);
+            }
+            80% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Features Section */
+        .features-section .text-container {
+            margin-left: 60px;
+        }
+
+        .features-section h3 {
+            font-size: 1.6em;
+            color: #99aab5;
+            animation-delay: 0.5s;
+        }
+
+        .features-section h1 {
+            font-size: 2.8em;
+            color: #ffffff;
+            margin: 10px 0;
+            animation-delay: 0.7s;
+        }
+
+        .features-section p {
+            font-size: 1.1em;
+            color: #99aab5;
+            margin: 0 0 20px;
+            animation-delay: 0.9s;
+        }
+
+        /* Button Styling */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            color: #ffffff;
+            background-color: #ff0000; /* Red theme background */
+            border: 2px solid #ff0000; /* Red border */
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: #ff0000; /* Slightly darker red on hover */
+            transform: scale(1.05);
+            color: #ffffff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Specific Button Styling for #home Section */
+        #home .btn {
+            background-color: transparent; /* Transparent background */
+            color: #ff0000; /* Red text */
+            border: 2px solid #ff0000; /* Red border */
+        }
+
+        #home .btn:hover {
+            background-color: #ff0000; /* Red background on hover */
+            color: #ffffff; /* White text on hover */
+        }
+
+        /* Call to Action Section */
+        .cta-section {
+            background-color: #1d1f22;
+            padding: 40px;
+            text-align: center;
+            color: #e4e6eb;
+            border-top: 2px solid #4f545c;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            color: #ffffff;
+            animation: bounceIn 1s forwards; /* Add bounce animation */
+        }
+
+        .cta-section .btn {
+            background-color: transparent;
+            color: #ff0000;
+            border: 2px solid #ff0000;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            animation: pulsingText 2s infinite; /* Apply pulsing animation to text */
+        }
+
+        .cta-section .btn:hover {
+            background-color: #ff0000;
+            color: #ffffff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer Styling */
+        #footer {
+            background-color: #202225;
+            color: #e4e6eb;
+            padding: 20px;
+            text-align: left; /* Align text to the left */
+            position: fixed;
+            width: 100%;
+            bottom: -60px; /* Hide initially */
+            left: 0;
+            transition: bottom 0.5s ease;
+            z-index: 1000;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #footer .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        #footer .footer-links a {
+            color: #ffffff;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        #footer .footer-links a:hover {
+            color: #ff0000;
+        }
+
+        @keyframes pulsingText {
+            0% {
+                text-shadow: 0 0 10px #ff0000;
+            }
+            50% {
+                text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000;
+            }
+            100% {
+                text-shadow: 0 0 10px #ff0000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#home" class="logo">Kibi.</a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#status">Status</a></li>
+            <li><a href="#support">Support</a></li>
+            <li><a href="#last-section"><i class="fa-solid fa-caret-down"></i></a></li> </ul>
+        </ul>
+        <div class="menu-toggle" id="menuToggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <section id="home" class="section first-section">
+        <div class="text-container">
+            <h1>Transform Your Server Experience with Kibi</h1>
+            <p>Join the growing community that relies on Kibi for a smoother, more engaging Discord server. Explore over 60 powerful commands and elevate your server’s capabilities.</p>
+            <a href="https://discord.com/api/oauth2/authorize?client_id=948347324286005298&permissions=268748880&scope=bot%20applications.commands" class="btn" target="_blank">Invite Kibi</a>
+        </div>
+
+        <div class="photo-container">
+            <img src="https://assets.polsu.xyz/overlay/requeue.png" alt="Kibi Bot Overview">
+        </div>
+    </section>
+
+    <section id="features" class="section features-section">
+        <div class="photo-container">
+            <img src="https://assets.polsu.xyz/website/stats.png" alt="Kibi Bot Features">
+        </div>
+        <div class="text-container">
+            <h3>Exclusive Features</h3>
+            <h1>Comprehensive Stats Viewing</h1>
+            <p>Experience your stats in a new light with Kibi’s intuitive commands. Track recent games and favorite friends for easy access.</p>
+            <a href="https://discord.com/api/oauth2/authorize?client_id=948347324286005298&permissions=268748880&scope=bot%20applications.commands" class="btn" target="_blank">View My Stats</a>
+        </div>
+    </section>
+
+    <section id="status" class="section status-section">
+        <div class="text-container">
+            <h1>Service Status</h1>
+            <p>Stay informed about Kibi’s operational status with real-time updates. Our goal is to provide seamless service without interruptions.</p>
+        </div>
+        <div class="photo-container">
+            <img src="https://assets.polsu.xyz/overlay/requeue.png" alt="Service Status">
+        </div>
+    </section>
+
+    <section id="support" class="section support-section">
+        <div class="text-container">
+            <h1>Need Help?</h1>
+            <p>If you encounter any issues or need assistance, our support team is here to help. Join our community and get the support you need.</p>
+        </div>
+        <div class="photo-container">
+            <img src="https://assets.polsu.xyz/overlay/requeue.png" alt="Support">
+        </div>
+    </section>
+
+    <section class="cta-section" id="last-section">
+        <h2>Elevate Your Guild's Experience</h2>
+        <a href="https://discord.com/api/oauth2/authorize?client_id=948347324286005298&permissions=268748880&scope=bot%20applications.commands" class="btn" target="_blank">Invite Bot</a>
+    </section>
+
+    
+
+    <footer id="footer">
+        <p>&copy; 2024 kibibot Development</p>
+        <div class="footer-links">
+            <a href="#terms">Terms of Service</a>
+            <a href="#privacy">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.querySelector('.nav-links');
+            const footer = document.getElementById('footer');
+            const navbar = document.querySelector('.navbar');
+
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+            });
+
+            const scrollToSection = (e) => {
+                e.preventDefault();
+                const targetId = e.currentTarget.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            };
+
+            document.querySelectorAll('.nav-links a, .logo').forEach(anchor => {
+                anchor.addEventListener('click', scrollToSection);
+            });
+
+            window.addEventListener('scroll', function() {
+                const featuresSection = document.getElementById('features');
+                const featuresPosition = featuresSection.offsetTop;
+                const scrollPosition = window.scrollY + window.innerHeight;
+
+                if (scrollPosition > featuresPosition) {
+                    navbar.classList.add('transparent');
+                } else {
+                    navbar.classList.remove('transparent');
+                }
+
+                const supportSection = document.getElementById('support');
+                const footerPosition = window.innerHeight + window.scrollY;
+                const supportPosition = supportSection.offsetTop + supportSection.offsetHeight;
+
+                if (footerPosition > supportPosition) {
+                    footer.style.bottom = '0';
+                } else {
+                    footer.style.bottom = '-60px';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
